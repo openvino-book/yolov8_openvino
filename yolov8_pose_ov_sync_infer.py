@@ -36,6 +36,8 @@ cap = cv2.VideoCapture("store-aisle-detection.mp4")
 while True:
     start = time.time()
     ret, frame = cap.read()
+    if not ret:
+          break
     [height, width, _] = frame.shape
     length = max((height, width))
     image = np.zeros((length, length, 3), np.uint8)
