@@ -4,10 +4,6 @@ import cv2, time, onnxruntime
 
 # 定义常量
 MODEL_NAME = "yolov8n"
-# ImageNet RGB mean, Shape:[1,1,C]
-IMAGENET_MEAN = np.array([123.675, 116.28 , 103.53])[np.newaxis, np.newaxis, :]  
-# ImageNet RGB standard deviation, Shape:[1,1,C]
-IMAGENET_STD = np.array([58.395, 57.12 , 57.375])[np.newaxis, np.newaxis, :]
 
 # 载入ImageNet标签
 session = onnxruntime.InferenceSession(f'{MODEL_NAME}-cls.onnx', providers=['CPUExecutionProvider'])
@@ -26,14 +22,15 @@ ir = net.create_infer_request()
 ##########################################
 #   ---根据模型定义预处理和后处理函数-------
 ##########################################
+
 # 定义预处理函数
 def preprocess(image, new_shape=(W,H)):
     # Preprocess image data from OpenCV
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)   # BGR->RGB
-    resized = cv2.resize(image, new_shape)           # Resize Image
-    norm = (resized - IMAGENET_MEAN) / IMAGENET_STD  # Normalization
-    blob = np.transpose(norm, (2, 0, 1))             # HWC->CHW
-    blob = np.expand_dims(blob, 0)                   # CHW->NCHW
+    [height, width, _] = image.shape
+    length = max((height, width))
+    letter_box = np.zeros((length, length, 3), np.uint8)
+    letter_box[0:height, 0:width] = image
+    blob = cv2.dnn.blobFromImage(image, scalefactor=1 / 255, size=new_shape, swapRB=True)
     return blob
 
 # 定义后处理函数
