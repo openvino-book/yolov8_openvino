@@ -16,7 +16,6 @@ def draw_bounding_box(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
     cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-
 # 实例化Core对象
 core = Core() 
 # 载入并编译模型
@@ -24,7 +23,7 @@ net = core.compile_model(f'{MODEL_NAME}.xml', device_name="AUTO")
 # 获得模型输出节点
 output_node = net.outputs[0]  # yolov8n只有一个输出节点
 ir = net.create_infer_request()
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("store-aisle-detection.mp4")
 
 while True:
     start = time.time()
