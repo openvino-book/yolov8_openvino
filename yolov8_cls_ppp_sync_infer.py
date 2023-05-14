@@ -13,7 +13,7 @@ imagenet_labels = eval(meta['names'])
 # 实例化Core对象
 core = Core() 
 # 载入并编译模型
-net = core.compile_model(f'{MODEL_NAME}-cls_ppp.xml', device_name="GPU")
+net = core.compile_model(f'{MODEL_NAME}-cls_ppp.xml', device_name="CPU")
 # 获得模型输出节点
 output_node = net.outputs[0]  # yolov8n-cls只有一个输出节点
 ir = net.create_infer_request()
